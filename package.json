@@ -1,0 +1,24 @@
+{
+  "name": "twitter-application",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EtoileSosso/twitter-application.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EtoileSosso/twitter-application/issues"
+  },
+  "homepage": "https://github.com/EtoileSosso/twitter-application#readme",
+  "dependencies": {
+    "dotenv": "^6.1.0",
+    "twitter": "^1.7.1",
+    "ws": "^6.1.0"
+  }
+}
