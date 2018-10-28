@@ -14,7 +14,6 @@ wsServer.on("connection", ws => {
   ws.on("message", message => {
     console.log("message from client: ", message);
     stream.track(message);
-    delete stream;
   });
 
   const socketStr = new SocketStream(ws);

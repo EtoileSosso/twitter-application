@@ -59,14 +59,17 @@
         list-style: none;
       }
       li {
-        color : white;
+        color : black;
         margin-bottom: 20px;
+        background: white;
+        padding : 10px;
       }
       li .userinfo {
         font-weight: bold;
         font-size: 16px;
         margin-bottom: 20px;
         margin-top : 5px;
+        display: flex;
       }
       li .userInfo img {
         margin-right : 20px;
@@ -109,7 +112,7 @@
         let tweetDatas = JSON.parse(event.data);
         const list = document.querySelector('#display').querySelector('ul');
         const content = document.createElement('li');
-        content.innerHTML = tweetDatas.count + '<div class="userinfo"><img src="' + tweetDatas.tweet.profilePic + '"/>' + tweetDatas.tweet.username + '</div><div class="tweet">' + tweetDatas.tweet.tweetContent + '</div><hr/>';
+        content.innerHTML = tweetDatas.count + '<div class="userinfo"><img src="' + tweetDatas.tweet.profilePic + '"/>' + tweetDatas.tweet.username + '</div><hr/><div class="tweet">' + tweetDatas.tweet.tweetContent + '</div>';
         list.insertBefore(content, list.childNodes[0]);
       });
       // begin search with filters applied
@@ -125,13 +128,13 @@
           socket.send(searchTerm.value);
           // cooldown API calls
           search.style.pointerEvents = "none";
-          searchTerm.style.pointerEvents = "none";
-          // search.innerHTML = "Please wait...";
-          search.innerHTML = "Please reload server";
-          /* setTimeout( () => {
+          // searchTerm.style.pointerEvents = "none";
+          search.innerHTML = "Please wait...";
+          // search.innerHTML = "Please reload server";
+          setTimeout( () => {
             search.innerHTML = "Search term";
             search.style.pointerEvents = "initial";
-          }, 3000) */
+          }, 3000)
         } else {
           search.innerHTML = "Please enter a value";
         }
