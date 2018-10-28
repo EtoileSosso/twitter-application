@@ -12,6 +12,5 @@ const twitterClient = new Twitter ({
 });
 
 const stream = new TwitterStream(twitterClient);
-stream.track("Macron");
 
 module.exports = stream;

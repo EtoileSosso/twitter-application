@@ -15,6 +15,8 @@ wsServer.on("connection", ws => {
 
   ws.on("message", message => {
     console.log("message from client: ", message);
+    let search = null;
+    search = stream.track(message);
   });
 
   const socketStr = new SocketStream(ws);

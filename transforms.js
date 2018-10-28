@@ -1,17 +1,19 @@
 const { Transform } = require("stream");
 
-const tweetExtractor = new Transform({
+const tweetExtractor = new Transform ({
   readableObjectMode: true,
   writableObjectMode: true,
 
   transform(chunk, encoding, callback) {
-    const newChunk = chunk.text;
-    this.push(newChunk);
+    const username = chunk.user.name;
+    const profilePic = chunk.user.profile_image_url_https;
+    const tweetContent = chunk.text;
+    this.push({username, tweetContent, profilePic});
     callback();
   }
 });
 
-const stringify = new Transform({
+const stringify = new Transform ({
   writableObjectMode: true,
 
   transform(chunk, _, callback) {
@@ -22,7 +24,7 @@ const stringify = new Transform({
 });
 
 let count = 0;
-const counter = new Transform({
+const counter = new Transform ({
   writableObjectMode: true,
   readableObjectMode: true,
 
@@ -35,6 +37,16 @@ const counter = new Transform({
     callback();
   }
 });
+
+/* const excludeRetweets = new Transform ({
+  writableObjectMode: true,
+  readableObjectMode: true,
+
+  transform(chunk, _, callback) {
+    const tweetContent = chunk.text;
+    callback();
+  }
+}); */
 
 module.exports = {
   tweetExtractor,

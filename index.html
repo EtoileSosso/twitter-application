@@ -9,7 +9,7 @@
         display: flex;
         justify-content: space-between;
       }
-      #mainbody div {
+      #mainbody #filterlist, #mainbody #display {
         width : 50%;
         height : calc(100vh - 20px);
         margin-top : 10px;
@@ -21,7 +21,15 @@
         justify-content: space-evenly;
         margin-left: 20px;
       }
-      #filterlist input {
+      #search {
+        cursor: pointer;
+      }
+      #searchinput:focus {
+        background: white;
+        color : #00aced;
+      }
+
+      #searchinput {
         width: 50%;
         height : 50px;
         background: none;
@@ -31,13 +39,6 @@
         font-size : 25px;
         padding: 10px;
         margin : 0 auto;
-      }
-      #filterlist input:focus {
-        background: white;
-        color : #00aced;
-      }
-      #search {
-        cursor: pointer;
       }
       button {
         width: 50%;
@@ -56,17 +57,51 @@
       ul {
         overflow-y : scroll;
         height : calc(100vh - 50px);
+        list-style: none;
       }
       li {
         color : white;
+        margin-bottom: 20px;
       }
+      li .userinfo {
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 20px;
+        margin-top : 5px;
+      }
+
+      li .userInfo img {
+        margin-right : 20px;
+      }
+
+      hr {
+        margin-top: 20px;
+        color: white;
+      }
+
+      #checkboxes {
+        display: flex;
+        margin : 0 25%;
+        margin-top : 25px;
+      }
+
+      label {
+        color : white;
+      }
+
     </style>
     <meta charset="utf-8">
   </head>
   <body>
     <section id="mainbody">
       <div id="filterlist">
-        <input id="searchinput" type="text" placeholder="Entrez votre recherche">
+        <div style="text-align : center;">
+          <input id="searchinput" type="text" placeholder="Entrez votre recherche">
+          <div id="checkboxes">
+            <label>RT</label>
+            <input id="includeRetweets" type="checkbox">
+          </div>
+        </div>
         <button id="search">Search term</button>
       </div>
       <div id="display">
@@ -81,15 +116,26 @@
         console.log("connected", event);
       });
       socket.addEventListener('message', function (event) {
-        // console.log("new message", "hi");
-        const list = document.querySelector('#display').querySelector('ul');
-        const content = document.createElement('li');
-        content.innerHTML = event.data;
-        list.insertBefore(content, list.childNodes[0]);
+        let tweetDatas = JSON.parse(event.data);
+        const searchforRT = tweetDatas.tweet.tweetContent.split(" ");
+        if(searchforRT[0] !== "RT") {
+          const list = document.querySelector('#display').querySelector('ul');
+          const content = document.createElement('li');
+          content.innerHTML = tweetDatas.count + '<div class="userinfo"><img src="' + tweetDatas.tweet.profilePic + '"/>' + tweetDatas.tweet.username + '</div><div class="tweet">' + tweetDatas.tweet.tweetContent + '</div><hr/>';
+          list.insertBefore(content, list.childNodes[0]);
+        }
       });
+      // begin search with filters applied
       search.addEventListener('click', (e) => {
-        let input = document.querySelector('#searchinput');
-        socket.send(input.value);
+        const searchTerm = document.querySelector('#searchinput');
+        const searchIncludesRT = document.querySelector('#includeRetweets').checked;
+        // reset displayed entries
+        const tweets = document.querySelectorAll('li');
+        for (let i = 0; i < tweets.length; i += 1) {
+          tweets[i].parentNode.removeChild(tweets[i]);
+        }
+        // begin search with terms
+        socket.send(searchTerm.value);
         // cooldown API calls
         search.style.pointerEvents = "none";
         search.innerHTML = "Please wait...";
