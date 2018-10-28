@@ -38,18 +38,25 @@ const counter = new Transform ({
   }
 });
 
-/* const excludeRetweets = new Transform ({
-  writableObjectMode: true,
+const excludeRetweets = new Transform ({
   readableObjectMode: true,
+  writableObjectMode: true,
 
-  transform(chunk, _, callback) {
+  transform(chunk, encoding, callback) {
+    const username = chunk.user.name;
+    const profilePic = chunk.user.profile_image_url_https;
     const tweetContent = chunk.text;
+    const tweetsArray = chunk.text.split(" ");
+    if (tweetsArray[0] !== "RT") {
+      this.push({username, tweetContent, profilePic});
+    }
     callback();
   }
-}); */
+});
 
 module.exports = {
   tweetExtractor,
   stringify,
-  counter
+  counter,
+  excludeRetweets
 };

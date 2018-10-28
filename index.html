@@ -28,7 +28,6 @@
         background: white;
         color : #00aced;
       }
-
       #searchinput {
         width: 50%;
         height : 50px;
@@ -69,26 +68,21 @@
         margin-bottom: 20px;
         margin-top : 5px;
       }
-
       li .userInfo img {
         margin-right : 20px;
       }
-
       hr {
         margin-top: 20px;
         color: white;
       }
-
       #checkboxes {
         display: flex;
         margin : 0 25%;
         margin-top : 25px;
       }
-
       label {
         color : white;
       }
-
     </style>
     <meta charset="utf-8">
   </head>
@@ -97,10 +91,6 @@
       <div id="filterlist">
         <div style="text-align : center;">
           <input id="searchinput" type="text" placeholder="Entrez votre recherche">
-          <div id="checkboxes">
-            <label>RT</label>
-            <input id="includeRetweets" type="checkbox">
-          </div>
         </div>
         <button id="search">Search term</button>
       </div>
@@ -117,18 +107,14 @@
       });
       socket.addEventListener('message', function (event) {
         let tweetDatas = JSON.parse(event.data);
-        const searchforRT = tweetDatas.tweet.tweetContent.split(" ");
-        if(searchforRT[0] !== "RT") {
-          const list = document.querySelector('#display').querySelector('ul');
-          const content = document.createElement('li');
-          content.innerHTML = tweetDatas.count + '<div class="userinfo"><img src="' + tweetDatas.tweet.profilePic + '"/>' + tweetDatas.tweet.username + '</div><div class="tweet">' + tweetDatas.tweet.tweetContent + '</div><hr/>';
-          list.insertBefore(content, list.childNodes[0]);
-        }
+        const list = document.querySelector('#display').querySelector('ul');
+        const content = document.createElement('li');
+        content.innerHTML = tweetDatas.count + '<div class="userinfo"><img src="' + tweetDatas.tweet.profilePic + '"/>' + tweetDatas.tweet.username + '</div><div class="tweet">' + tweetDatas.tweet.tweetContent + '</div><hr/>';
+        list.insertBefore(content, list.childNodes[0]);
       });
       // begin search with filters applied
       search.addEventListener('click', (e) => {
         const searchTerm = document.querySelector('#searchinput');
-        const searchIncludesRT = document.querySelector('#includeRetweets').checked;
         // reset displayed entries
         const tweets = document.querySelectorAll('li');
         for (let i = 0; i < tweets.length; i += 1) {
