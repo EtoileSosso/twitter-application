@@ -13,11 +13,10 @@ wsServer.on("connection", ws => {
 
   ws.on("message", message => {
     console.log("message from client: ", message);
-    const search = stream.track(message);
+    stream.track(message);
+    delete stream;
   });
 
   const socketStr = new SocketStream(ws);
   transformedStream.pipe(socketStr);
 });
-
-search = null;
