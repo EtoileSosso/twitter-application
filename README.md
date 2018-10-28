@@ -24,3 +24,5 @@ localhost:5000
 
 I excluded the retweets from the tweets that were supposed to be retrieved and added on the front.
 I also allowed the user to enter his own search terms. However, they can't do more than a research every 3 seconds. 
+
+There is a problem regarding the research function, I haven't found how to make only one query at a time so I decided to disable the searchbar once the first input has been made.
