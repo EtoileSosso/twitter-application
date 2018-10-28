@@ -115,21 +115,27 @@
       // begin search with filters applied
       search.addEventListener('click', (e) => {
         const searchTerm = document.querySelector('#searchinput');
-        // reset displayed entries
-        const tweets = document.querySelectorAll('li');
-        for (let i = 0; i < tweets.length; i += 1) {
-          tweets[i].parentNode.removeChild(tweets[i]);
+        if (searchTerm.value !== '') {
+          // reset displayed entries
+          const tweets = document.querySelectorAll('li');
+          for (let i = 0; i < tweets.length; i += 1) {
+            tweets[i].parentNode.removeChild(tweets[i]);
+          }
+          // begin search with terms
+          socket.send(searchTerm.value);
+          // cooldown API calls
+          search.style.pointerEvents = "none";
+          searchTerm.style.pointerEvents = "none";
+          // search.innerHTML = "Please wait...";
+          search.innerHTML = "Please reload server";
+          /* setTimeout( () => {
+            search.innerHTML = "Search term";
+            search.style.pointerEvents = "initial";
+          }, 3000) */
+        } else {
+          search.innerHTML = "Please enter a value";
         }
-        // begin search with terms
-        socket.send(searchTerm.value);
-        // cooldown API calls
-        search.style.pointerEvents = "none";
-        search.innerHTML = "Please wait...";
-        setTimeout( () => {
-          search.innerHTML = "Search term";
-          search.style.pointerEvents = "initial";
-        }, 3000)
-        });
+      });
     </script>
   </body>
 </html>
