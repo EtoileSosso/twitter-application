@@ -11,7 +11,7 @@
       }
       #mainbody div {
         width : 50%;
-        min-height : calc(100vh - 30px);
+        height : calc(100vh - 20px);
         margin-top : 10px;
       }
       #filterlist {
@@ -30,10 +30,14 @@
         transition: all 0.5s;
         font-size : 25px;
         padding: 10px;
+        margin : 0 auto;
       }
       #filterlist input:focus {
         background: white;
         color : #00aced;
+      }
+      #search {
+        cursor: pointer;
       }
       button {
         width: 50%;
@@ -43,41 +47,59 @@
         height: 50px;
         font-size : 25px;
         transition: all 0.5s;
+        margin : 0 auto;
       }
       button:hover {
         background: white;
         color : #00aced;
       }
+      ul {
+        overflow-y : scroll;
+        height : calc(100vh - 50px);
+      }
       li {
         color : white;
       }
     </style>
-    <script>
-      var socket = new WebSocket('ws://localhost:5000');
-      socket.addEventListener('open', function (event) {
-        console.log("connected", event);
-      });
-      socket.addEventListener('message', function (event) {
-        console.log("new message", event.data);
-        const list = document.querySelector('#display').querySelector('ul');
-        const content = document.createElement('li');
-        content.innerHTML = event.data;
-        list.appendChild(content);
-      });
-    </script>
-    <script src="./main.js" type="text/ecmascript">
-    </script>
+    <meta charset="utf-8">
   </head>
   <body>
     <section id="mainbody">
       <div id="filterlist">
-        <input type="text" placeholder="Entrez votre recherche">
-        <button>Rechercher</button>
+        <input id="searchinput" type="text" placeholder="Entrez votre recherche">
+        <button id="search">Search term</button>
       </div>
       <div id="display">
         <ul>
         </ul>
       </div>
     </section>
+    <script>
+      let socket = new WebSocket('ws://localhost:5000');
+      const search = document.querySelector('#search');
+      socket.addEventListener('open', function (event) {
+        console.log("connected", event);
+      });
+      socket.addEventListener('message', function (event) {
+        // console.log("new message", "hi");
+        const list = document.querySelector('#display').querySelector('ul');
+        const content = document.createElement('li');
+        content.innerHTML = event.data;
+        list.insertBefore(content, list.childNodes[0]);
+      });
+      search.addEventListener('click', (e) => {
+        let input = document.querySelector('#searchinput');
+        socket.send(input.value);
+        // cooldown API calls
+        search.style.pointerEvents = "none";
+        search.innerHTML = "Please wait...";
+        setTimeout( () => {
+          search.innerHTML = "Search term";
+          search.style.pointerEvents = "initial";
+        }, 3000)
+        });
+    </script>
+    <script src="./main.js" type="text/ecmascript">
+    </script>
   </body>
 </html>
